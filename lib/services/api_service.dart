@@ -1,76 +1,79 @@
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import '../models/board.dart';
 
-/// Servizio responsabile di tutte le chiamate di rete (HTTP).
-/// Utilizza il pacchetto [dio] che è molto potente per gestire le API.
 class ApiService {
-  // L'URL base è l'indirizzo comune a tutte le nostre chiamate.
-  static const String _baseUrl =
-      'https://69846b7e885008c00db120c3.mockapi.io/api/v1';
-
-  // Creiamo un'istanza di Dio configurata con il nostro URL base.
+  // URL API Mock
+  static const String _baseUrl = 'https://69846b7e885008c00db120c3.mockapi.io/api/v1';
   final Dio _dio = Dio(BaseOptions(baseUrl: _baseUrl));
 
-  /// Recupera la lista di tutte le tavole da surf disponibili.
-  Future<List<Map<String, dynamic>>> getBoards() async {
+  // Chiave per salvare i dati locali sul telefono
+  static const String _localBoardsKey = 'local_added_boards';
+
+  // METODO 1: Scarica Tavole (API + Locale)
+  // Corregge l'errore "argument type map can't be assigned to SurfBoard"
+  Future<List<SurfBoard>> getBoards() async {
+    List<SurfBoard> allBoards = [];
+
+    // A. Tenta di scaricare dall'API
     try {
       final response = await _dio.get('/Exam1');
-
       if (response.statusCode == 200) {
-        // L'API restituisce un array con un oggetto che contiene la chiave "boards"
         final List<dynamic> data = response.data;
+        // Controlla la struttura specifica della tua API
         if (data.isNotEmpty && data[0]['boards'] != null) {
-          final List<dynamic> boards = data[0]['boards'];
-          return boards.cast<Map<String, dynamic>>();
+          final List<dynamic> boardsJson = data[0]['boards'];
+          // Converte JSON in oggetti SurfBoard
+          allBoards.addAll(boardsJson.map((json) => SurfBoard.fromJson(json)).toList());
         }
-        return [];
       }
-      return [];
     } catch (e) {
-      debugPrint('Errore getBoards: $e');
-      return [];
+      debugPrint('Errore API (uso solo dati locali): $e');
     }
+
+    // B. Recupera le tavole salvate localmente dall'Admin
+    try {
+      final prefs = await SharedPreferences.getInstance();
+      final String? localString = prefs.getString(_localBoardsKey);
+      if (localString != null) {
+        List<dynamic> localJson = jsonDecode(localString);
+        allBoards.addAll(localJson.map((json) => SurfBoard.fromJson(json)).toList());
+      }
+    } catch (e) {
+      debugPrint('Errore Local Storage: $e');
+    }
+
+    return allBoards;
   }
 
-  /// Recupera la lista di tutti i piatti del menu.
-  Future<List<Map<String, dynamic>>> getMenu() async {
-    try {
-      final response = await _dio.get('/Exam1');
+  // METODO 2: Aggiunge una tavola (Solo in locale)
+  // Corregge l'errore "addBoard isn't defined"
+  Future<void> addBoard(SurfBoard newBoard) async {
+    final prefs = await SharedPreferences.getInstance();
 
-      if (response.statusCode == 200) {
-        // L'API restituisce un array con un oggetto che contiene la chiave "menu"
-        final List<dynamic> data = response.data;
-        if (data.isNotEmpty && data[0]['menu'] != null) {
-          final List<dynamic> menu = data[0]['menu'];
-          return menu.cast<Map<String, dynamic>>();
-        }
-        return [];
-      }
-      return [];
-    } catch (e) {
-      debugPrint('Errore getMenu: $e');
-      return [];
+    List<SurfBoard> localBoards = [];
+    final String? localString = prefs.getString(_localBoardsKey);
+
+    if (localString != null) {
+      List<dynamic> localJson = jsonDecode(localString);
+      localBoards = localJson.map((json) => SurfBoard.fromJson(json)).toList();
     }
+
+    localBoards.add(newBoard);
+
+    // Salva la lista aggiornata
+    String encodedData = jsonEncode(localBoards.map((b) => b.toJson()).toList());
+    await prefs.setString(_localBoardsKey, encodedData);
   }
 
-  /// Recupera la lista di tutte le stanze disponibili.
-  Future<List<Map<String, dynamic>>> getRooms() async {
-    try {
-      final response = await _dio.get('/Exam1');
-
-      if (response.statusCode == 200) {
-        // L'API restituisce un array con un oggetto che contiene la chiave "rooms"
-        final List<dynamic> data = response.data;
-        if (data.isNotEmpty && data[0]['rooms'] != null) {
-          final List<dynamic> rooms = data[0]['rooms'];
-          return rooms.cast<Map<String, dynamic>>();
-        }
-        return [];
-      }
-      return [];
-    } catch (e) {
-      debugPrint('Errore getRooms: $e');
-      return [];
+  // METODO 3: Login Semplice
+  // Corregge l'errore "checkLogin isn't defined"
+  String? checkLogin(String user, String pass) {
+    if (user == 'admin' && pass == '1234') {
+      return 'admin';
     }
+    return null;
   }
 }
