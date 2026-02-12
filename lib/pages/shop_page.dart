@@ -52,21 +52,20 @@ class _ShopPageState extends State<ShopPage> {
                 final boards = snapshot.data!;
                 if (boards.isEmpty) return const Center(child: Text("Nessun prodotto", style: TextStyle(color: Colors.white)));
 
-                // QUI C'È LA MAGIA RESPONSIVE
+                // Resposivee
                 return LayoutBuilder(
                   builder: (context, constraints) {
-                    // Calcoliamo quante colonne mettere in base alla larghezza dello schermo
                     int colonne = 2;
                     double width = constraints.maxWidth;
 
                     if (width > 1200) {
-                      colonne = 5; // Schermi enormi
+                      colonne = 5;
                     } else if (width > 900) {
-                      colonne = 4; // Desktop standard
+                      colonne = 4; // Desktop
                     } else if (width > 600) {
                       colonne = 3; // Tablet
                     } else {
-                      colonne = 2; // Mobile
+                      colonne = 2; // Telefono
                     }
 
                     return GridView.builder(

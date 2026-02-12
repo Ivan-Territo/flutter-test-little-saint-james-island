@@ -8,6 +8,7 @@ class SurfBoard {
   final bool disponibile;
   final String urlImmagine;
 
+// costruttore sotto
   const SurfBoard({
     required this.id,
     required this.modello,
@@ -19,7 +20,7 @@ class SurfBoard {
     required this.urlImmagine,
   });
 
-  // Da JSON (API o Locale) a Oggetto Dart
+  // da JSON a dart
   factory SurfBoard.fromJson(Map<String, dynamic> json) {
     return SurfBoard(
       id: json['id'].toString(), // Converte in stringa per sicurezza
@@ -36,7 +37,7 @@ class SurfBoard {
     );
   }
 
-  // Da Oggetto Dart a JSON
+  // converte dart a json
   Map<String, dynamic> toJson() {
     return {
       'id': id,

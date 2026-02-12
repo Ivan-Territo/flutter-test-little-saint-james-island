@@ -76,7 +76,7 @@ class _AdminPageState extends State<AdminPage> {
             const Text("DAI TUOI ASSETS:", style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
             const SizedBox(height: 10),
 
-            // ANTEPRIMA IMMAGINI LOCALI
+            //immagini localzzz
             SizedBox(
               height: 80,
               child: ListView.builder(
@@ -93,7 +93,6 @@ class _AdminPageState extends State<AdminPage> {
                           border: _urlController.text == path ? Border.all(color: const Color(0xFFD9FF00), width: 3) : null,
                           borderRadius: BorderRadius.circular(10)
                       ),
-                      // Qui usiamo Image.asset perché sappiamo che la lista 'immaginiStock' contiene solo file locali
                       child: ClipRRect(
                         borderRadius: BorderRadius.circular(8),
                         child: Image.asset(path, fit: BoxFit.cover, errorBuilder: (c,e,s) => const Icon(Icons.error)),

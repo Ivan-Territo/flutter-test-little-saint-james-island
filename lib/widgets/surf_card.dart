@@ -16,7 +16,7 @@ class SurfCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.3),
             blurRadius: 10,
             offset: const Offset(0, 4),
           )
@@ -25,7 +25,7 @@ class SurfCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // IMMAGINE (Dinamica)
+          // immagine dinamica con gestione errori
           Expanded(
             flex: 3,
             child: ClipRRect(
@@ -50,7 +50,7 @@ class SurfCard extends StatelessWidget {
             ),
           ),
 
-          // DATI (Identico a prima)
+          // dati e prezzo
           Expanded(
             flex: 2,
             child: Padding(

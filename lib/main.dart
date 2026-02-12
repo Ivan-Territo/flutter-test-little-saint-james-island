@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'pages/home_page.dart'; // Importa la home aggiornata
+import 'pages/home_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -8,10 +8,10 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  @override
+  @override // tema generale
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Surf Shop',
+      title: 'A Tavoletta e-commerce',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         scaffoldBackgroundColor: const Color(0xFF5F8D88),

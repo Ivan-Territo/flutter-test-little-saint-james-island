@@ -19,7 +19,7 @@ class _LoginPageState extends State<LoginPage> {
     if (ruolo == 'admin') {
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (c) => const AdminPage()));
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Errore! Prova admin / 1234')));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Errore! Prova admin / 1234'))); //lo so che non si fa xd
     }
   }
 
@@ -32,7 +32,7 @@ class _LoginPageState extends State<LoginPage> {
         child: Container(
           margin: const EdgeInsets.all(30),
           padding: const EdgeInsets.all(25),
-          decoration: BoxDecoration(color: Colors.white.withOpacity(0.9), borderRadius: BorderRadius.circular(20)),
+          decoration: BoxDecoration(color: Colors.white.withValues(alpha: 0.9), borderRadius: BorderRadius.circular(20)),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [

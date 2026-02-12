@@ -12,20 +12,20 @@ class ApiService {
   // Chiave per salvare i dati locali sul telefono
   static const String _localBoardsKey = 'local_added_boards';
 
-  // METODO 1: Scarica Tavole (API + Locale)
-  // Corregge l'errore "argument type map can't be assigned to SurfBoard"
+  // Scarica le tavole API e Locale
+  // Corregge "argument type map can't be assigned to SurfBoard"
   Future<List<SurfBoard>> getBoards() async {
     List<SurfBoard> allBoards = [];
 
-    // A. Tenta di scaricare dall'API
+    // scaricare dall'API
     try {
       final response = await _dio.get('/Exam1');
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
-        // Controlla la struttura specifica della tua API
+        // Controlla la struttura della API
         if (data.isNotEmpty && data[0]['boards'] != null) {
           final List<dynamic> boardsJson = data[0]['boards'];
-          // Converte JSON in oggetti SurfBoard
+          // Converte in oggetti SurfBoard
           allBoards.addAll(boardsJson.map((json) => SurfBoard.fromJson(json)).toList());
         }
       }
@@ -33,7 +33,7 @@ class ApiService {
       debugPrint('Errore API (uso solo dati locali): $e');
     }
 
-    // B. Recupera le tavole salvate localmente dall'Admin
+    // recupera le tavole
     try {
       final prefs = await SharedPreferences.getInstance();
       final String? localString = prefs.getString(_localBoardsKey);
@@ -48,8 +48,8 @@ class ApiService {
     return allBoards;
   }
 
-  // METODO 2: Aggiunge una tavola (Solo in locale)
-  // Corregge l'errore "addBoard isn't defined"
+  //Aggiunge una tavola solo in locale
+  // Corregge "addBoard isn't defined"
   Future<void> addBoard(SurfBoard newBoard) async {
     final prefs = await SharedPreferences.getInstance();
 
@@ -63,13 +63,13 @@ class ApiService {
 
     localBoards.add(newBoard);
 
-    // Salva la lista aggiornata
+    // Salva la lista
     String encodedData = jsonEncode(localBoards.map((b) => b.toJson()).toList());
     await prefs.setString(_localBoardsKey, encodedData);
   }
 
-  // METODO 3: Login Semplice
-  // Corregge l'errore "checkLogin isn't defined"
+  //Login Semplificato
+  // Corregge "checkLogin isn't defined"
   String? checkLogin(String user, String pass) {
     if (user == 'admin' && pass == '1234') {
       return 'admin';
